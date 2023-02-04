@@ -1,0 +1,36 @@
+# Load the necessary libraries
+library(REsolver)
+library(dplyr)
+
+# Define the simulation parameters
+num_timesteps <- 100
+timestep_size <- 1
+initial_pressure <- 2000
+
+# Create a dataframe to store the simulation results
+sim_results <- data.frame(timestep=1:num_timesteps, 
+                         pressure=rep(initial_pressure, num_timesteps))
+
+# Define the simulation function
+simulation_model <- function(timestep, state) {
+  # Extract the current pressure value
+  pressure <- state$pressure[timestep]
+  
+  # Perform the simulation calculation
+  delta_pressure <- -0.1 * pressure
+  
+  # Store the updated pressure value in the results dataframe
+  sim_results$pressure[timestep + 1] <- pressure + delta_pressure
+  
+  # Return the updated state
+  state
+}
+
+# Run the simulation
+state <- sim_results
+for (i in 1:num_timesteps) {
+  state <- simulation_model(i, state)
+}
+
+# Plot the simulation results
+plot(sim_results$timestep, sim_results$pressure, type="l", xlab="Timestep", ylab="Pressure")
